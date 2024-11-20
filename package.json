@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.4.7",
     "@nestjs/typeorm": "^10.0.2",
+    "@tdengine/websocket": "^3.1.2",
     "binary-parser": "^2.2.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",

@@ -10,6 +10,7 @@ import { Machine } from './entity/machine.entity';
       type: 'sqlite',
       database: 'main.db',
       autoLoadEntities: true,
+      logging: true,
     }),
     TypeOrmModule.forFeature([Machine]),
   ],

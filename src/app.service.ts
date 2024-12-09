@@ -8,8 +8,8 @@ import * as taos from '@tdengine/websocket'
 
 @Injectable()
 export class AppService {
-  public taosClient: any;
-  public conf: any;
+  public taosClient: taos.WsSql;
+  public conf:  taos.WSConfig;
   private readonly logger = new Logger(AppService.name);
   constructor(
     @InjectRepository(Machine) private readonly machineRepository: Repository<Machine>,
@@ -23,6 +23,10 @@ export class AppService {
     this.logger.log('初始化taos连接 start');
     this.taosClient = await taos.sqlConnect(this.conf);
     this.logger.log('初始化taos连接 end');
+  }
+
+  onApplicationShutdown() { 
+    this.taosClient.close();
   }
 
   async getHello() {

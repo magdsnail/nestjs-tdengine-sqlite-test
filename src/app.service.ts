@@ -16,7 +16,7 @@ export class AppService {
   constructor(
     @InjectRepository(Machine) private readonly machineRepository: Repository<Machine>,
   ) {
-    this.conf = new taos.WSConfig('ws://172.16.150.10:6041');
+    this.conf = new taos.WSConfig('ws://127.0.0.1:6041');
     this.conf.setUser('root');
     this.conf.setPwd('taosdata');
   }
@@ -34,7 +34,7 @@ export class AppService {
   async getHello() {
     await this.taosClient.exec(`use rawdata`);
     const a = await this.taosClient.exec(`insert into 
-      rawdata.d6660004fff0469eaaf588501
+      rawdata.d_01
       using rawdata.usv (tid, mid, signal_name, adapter_id, type) tags(1,2,3,4,5) values(NOW + 1a, 1,2,3)`);
     return 'Hello World!';
   }

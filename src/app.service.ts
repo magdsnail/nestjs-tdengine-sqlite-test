@@ -5,16 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Buffer } from 'node:buffer';
 import { calcRawData, getSetpByType } from './util/calc-raw-data';
 import * as taos from '@tdengine/websocket'
+import * as microtime from 'microtime';
 
 @Injectable()
 export class AppService {
   public taosClient: taos.WsSql;
   public conf:  taos.WSConfig;
   private readonly logger = new Logger(AppService.name);
+
   constructor(
     @InjectRepository(Machine) private readonly machineRepository: Repository<Machine>,
   ) {
-    this.conf = new taos.WSConfig('ws://192.168.0.52:6041');
+    this.conf = new taos.WSConfig('ws://172.16.150.10:6041');
     this.conf.setUser('root');
     this.conf.setPwd('taosdata');
   }

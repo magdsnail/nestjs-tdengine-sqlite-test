@@ -40,8 +40,6 @@ export class AppService {
   }
 
   async getDb() {
-    const tid = '6660004fff0469eaaf588501';
-    const mid = '801607107';
     const machines = await this.machineRepository.find({
       where: {
         signalName: In(['usv-x', 'usv-y', 'usv-z']),
@@ -77,7 +75,7 @@ export class AppService {
       const z = this.calcRawData(element['usv-z'].value, element['usv-z'].timeStamp, element['usv-z'].valueType, element['usv-z'].valueCount);
       for (let i = 0; i < x.length; i++) {
         const sql = 'INSERT INTO ' +
-          'rawdata.d6660004fff0469eaaf588501 using rawdata.usv (tid, mid) tags(1, 1)' +
+          'rawdata.d_01 using rawdata.usv (tid, mid) tags(1, 1)' +
           'values(NOW + 1u,' +
           ` ${x[i].v}, ${y[i].v}, ${z[i].v}` + ')';
         const a = await this.taosClient.exec(sql);

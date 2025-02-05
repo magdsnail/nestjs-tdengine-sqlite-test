@@ -32,6 +32,8 @@
     "@nestjs/typeorm": "^10.0.2",
     "@tdengine/websocket": "^3.1.2",
     "binary-parser": "^2.2.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "microtime": "^3.1.1",
     "mongoose": "^8.9.5",
     "nest-winston": "^1.10.2",

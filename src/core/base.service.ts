@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
-import { IedpApiI } from '../configs/iedp.config';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -21,17 +21,15 @@ export class BaseService {
   @Inject()
   protected readonly eventEmitter: EventEmitter2;
 
+  // @Inject(MqttService)
+  // protected readonly mqttService: MqttService;
+
   @Inject('MATH_SERVICE_MQTT') protected mqttService: ClientProxy;
 
+  @Inject(WINSTON_MODULE_PROVIDER) protected readonly logger: Logger;
+  
   async onApplicationBootstrap() {
     await this.mqttService.connect();
   }
 
-  /**
-   * 告警通知
-   */
-  async alarmNotice() {
-    const { baseUrl } = this.configService.get<IedpApiI>('iedp');
-    firstValueFrom(this.httpService.get(`${baseUrl}/alarm/notice/sync`));
-  }
 }

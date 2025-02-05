@@ -20,20 +20,27 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/event-emitter": "^3.0.0",
+    "@nestjs/microservices": "^11.0.5",
+    "@nestjs/mongoose": "^11.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.4.7",
     "@nestjs/typeorm": "^10.0.2",
     "@tdengine/websocket": "^3.1.2",
     "binary-parser": "^2.2.1",
     "microtime": "^3.1.1",
+    "mongoose": "^8.9.5",
+    "nest-winston": "^1.10.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

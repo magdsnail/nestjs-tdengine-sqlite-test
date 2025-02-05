@@ -5,7 +5,6 @@ import { Base } from '@/schema/base';
 import { AnyType } from '@/common/type';
 import { PAGE } from '@/common/constant/page.constant';
 import { BaseService } from './base.service';
-import { Injectable } from '@nestjs/common';
 
 export class MongodbService<T extends Base> extends BaseService {
   @InjectConnection()
@@ -17,7 +16,7 @@ export class MongodbService<T extends Base> extends BaseService {
     super();
   }
 
-  async bulkWrite(writes: AnyType) {
+  async bulkWrite(writes: AnyType): Promise<any> {
     const result = await this.model.bulkWrite(writes);
     return result;
   }
@@ -101,9 +100,10 @@ export class MongodbService<T extends Base> extends BaseService {
     return await this.model.aggregate(pipeline, options);
   }
 
-  async deleteMany(conditions?: AnyType) {
+  async deleteMany(conditions?: AnyType): Promise<any> {
     return await this.model.deleteMany(conditions);
   }
+  
   /**
    * 处理事务
    * @param cb 回调函数

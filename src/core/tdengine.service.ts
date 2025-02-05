@@ -26,7 +26,7 @@ export class TdengineService {
       this.conf.setTimeOut(120000);
       this.taosWsSql = await taos.sqlConnect(this.conf);
     } catch (error) {
-      throw new Error('TDengine 连接失败' + error);
+      this.logger.error('TDengine 连接失败' + error);
     }
   }
 
@@ -47,43 +47,41 @@ export class TdengineService {
     tags: AnyType;
     values: AnyType;
   }, db: string = 'rawdata') {
-    try {
-      const { tags = [], values = [] } = data;
-      const taosStmt = await this.taosWsSql.stmtInit();
-      const prepareSql = `INSERT INTO ? USING ${db}.${stable} TAGS (${Array(tags.length).fill('?').join(',')}) (${columns.join(',')}) VALUES (${Array(columns.length).fill('?').join(',')})`;
-      await taosStmt.prepare(prepareSql);
-      await taosStmt.setTableName(`d_${table}`);
+    this.logger.log(`${stable} ${table} ${columns}`);
+    const { tags = [], values = [] } = data;
+    const taosStmt = await this.taosWsSql.stmtInit();
+    const prepareSql = `INSERT INTO ? USING ${db}.${stable} TAGS (${Array(tags.length).fill('?').join(',')}) (${columns.join(',')}) VALUES (${Array(columns.length).fill('?').join(',')})`;
+    this.logger.log('sql', prepareSql);
+    await taosStmt.prepare(prepareSql);
+    await taosStmt.setTableName(`d_${table}`);
 
-      let tagParams = taosStmt.newStmtParam();
-      for (let i = 0; i < tags.length; i++) {
-        if (typeof tags[i] === 'number') {
-          tagParams.setInt([tags[i]]);
-        } else {
-          tagParams.setVarchar([tags[i]]);
-        }
+    let tagParams = taosStmt.newStmtParam();
+    for (let i = 0; i < tags.length; i++) {
+      if (typeof tags[i] === 'number') {
+        tagParams.setInt([tags[i]]);
+      } else {
+        tagParams.setVarchar([tags[i]]);
       }
-      await taosStmt.setTags(tagParams);
-
-      let bindParams = taosStmt.newStmtParam();
-      for (const { type, value } of values) {
-        if (type === 'TIMESTAMP') {
-          bindParams.setTimestamp(value);
-        } else if (type === 'BOOL') {
-          bindParams.setBoolean(value);
-        } else if (type === 'STRING') {
-          bindParams.setVarchar(value);
-        } else if (type === 'DOUBLE') {
-          bindParams.setDouble(value);
-        } else if (type === 'INT32') {
-          bindParams.setInt(value);
-        }
-      }
-      await taosStmt.bind(bindParams);
-      await taosStmt.batch();
-      await taosStmt.exec();
-    } catch (error) {
-      this.logger.error('TDengine 插入失败' + error);
     }
+    await taosStmt.setTags(tagParams);
+
+    let bindParams = taosStmt.newStmtParam();
+    for (const { type, value } of values) {
+      if (type === 'TIMESTAMP') {
+        bindParams.setTimestamp(value);
+      } else if (type === 'BOOL') {
+        bindParams.setBoolean(value);
+      } else if (type === 'STRING') {
+        bindParams.setVarchar(value);
+      } else if (type === 'DOUBLE') {
+        bindParams.setDouble(value);
+      } else if (type === 'INT32') {
+        bindParams.setInt(value);
+      }
+    }
+    await taosStmt.bind(bindParams);
+    await taosStmt.batch();
+    await taosStmt.exec();
   }
 
 
@@ -109,15 +107,15 @@ export class TdengineService {
           sql += 'INT;';
         } else if (type === 'TIMESTAMP') {
           sql += 'TIMESTAMP;';
-        } else if (type === 'BOOL') { 
-          sql += 'BOOL;';          
+        } else if (type === 'BOOL') {
+          sql += 'BOOL;';
         } else {
           sql += 'DOUBLE;';
         }
         await this.taosWsSql.exec(sql);
       }
     } catch (error) {
-      throw new Error('TDengine 添加列失败' + error);
+      this.logger.error('TDengine 添加列失败', error, stable, JSON.stringify(columns));
     }
   }
 

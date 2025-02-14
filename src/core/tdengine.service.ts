@@ -152,6 +152,14 @@ export class TdengineService {
     };
   }
 
+  async isSubTableExists(subTableName: string, db: string = 'rawdata'): Promise<boolean> {
+    const sql = `SHOW ${db}.TABLES LIKE '${subTableName}'`;
+    const cursor = await this.taosWsSql.query(sql);
+    const exists = await cursor.next();
+    await cursor.close();
+    return exists;
+  }
+
   onApplicationShutdown() {
     this.close();
   }
